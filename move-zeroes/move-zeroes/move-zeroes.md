@@ -27,6 +27,66 @@ public:
 };
 ```
 
+## 备注
+
+第二次没有直接写出
+
+相似题组[移除元素](https://leetcode.cn/problems/remove-element/)
+
+![image-20250514171644733](https://md-wind.oss-cn-nanjing.aliyuncs.com/md/20250514171644806.png)
+
+```cpp
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int visited = 0;
+        int NonValBack = -1;
+        while(visited < nums.size())
+        {
+            if(nums[visited] != val)
+                swap(nums[++NonValBack], nums[visited]);
+            
+            ++visited;
+        }
+
+        return NonValBack + 1;
+    }
+};
+```
+
+[对数组执行操作](https://leetcode.cn/problems/apply-operations-to-an-array/)
+
+![image-20250514171743425](https://md-wind.oss-cn-nanjing.aliyuncs.com/md/20250514171743485.png)
+
+```cpp
+lass Solution {
+public:
+    vector<int> applyOperations(vector<int>& nums) {
+        int n = nums.size() - 1;
+        for(int i = 0; i < n; ++i)
+        {
+            if(nums[i] == nums[i + 1])
+            {
+                nums[i] *= 2;
+                nums[i+1] = 0;
+            }
+        }
+
+        int visiting = 0;
+        int NonZeroBack = -1;
+        while(visiting <= n)
+        {
+            if(nums[visiting] != 0)
+                swap(nums[++NonZeroBack], nums[visiting]);
+            
+            ++visiting;
+        }
+
+        return nums;
+    }
+};
+```
+
 
 
 # end

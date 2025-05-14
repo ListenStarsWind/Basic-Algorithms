@@ -112,4 +112,46 @@ public:
 };
 ```
 
+## 备注
+
+第二次没有一次写出
+
+```cpp
+class Solution {
+public:
+    void duplicateZeros(vector<int>& arr) {
+       int src = 0;
+       int dst = -1;
+       while(true)
+       {
+            if(arr[src] == 0)
+                ++dst;
+            
+            ++dst;
+            if(dst >= arr.size() - 1)
+                break;
+            
+            ++src;
+       }
+
+       if(arr[src] == 0 && dst >= arr.size())
+        {
+            arr.back() = 0;
+            dst = arr.size() - 2;
+            --src;
+        }
+
+        while(src >= 0)
+        {
+            if(arr[src] == 0)
+                arr[dst--] = 0;
+            
+            arr[dst--] = arr[src--]; 
+        }
+    }
+};
+```
+
+代码严谨度明显下降了
+
 # end
