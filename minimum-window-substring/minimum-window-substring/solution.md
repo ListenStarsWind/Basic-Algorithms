@@ -76,4 +76,66 @@ public:
 
 最后要注意一些细节，比如找不到要返回空字符串。计数器更新的两个`if`中，前面的条件可加可不加，我这里加上是为了让逻辑更加清晰，哈希表里没这个关键字就不要比了。
 
+## 后记
+
+后来我又重新做了这道题, 我认为, 使用字符个数进行控制是完全可行的, 而不是像之前我说的那样, 统计次数的时候会引发`count`错误更新, 引发误判, 只不过, 字符个数的控制对代码的顺序有很高的要求, 另外吐槽一点, 以前写的代码说实话不太好, 怎么单个字符都要用引用, 有一种想学好却弄巧成拙的感觉.
+
+```cpp
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int hash1[128] = {0};
+        int hash2[128] = {0};
+
+        for(auto c : t) ++hash1[c];
+
+        int left = 0, right = 0, count = 0;
+        int ans_begin = -1, ans_len = INT_MAX; 
+        int end = s.size(), len = t.size();
+        while(right < end)
+        {
+            char c = s[right++];
+
+            ++hash2[c];
+		   
+            // 如果hash1[c] == 0, 则在之前的加加中
+            // hash2[c] > 0, 所以不会触发0 == 0
+            // count不会被更新
+            if(hash2[c] <= hash1[c])
+                ++count;
+
+            while(count == len)
+            {
+                // 尽管会明显进行冗余判断, 但对性能几乎没有影响
+                if(right - left < ans_len)
+                {
+                    ans_begin = left;
+                    ans_len = right - left;
+                }
+
+
+                char temp = s[left++];
+				
+                // 如果hash1[temp] == 0
+                // 出窗口, temp本来就在窗口中
+                // hash2[temp]>0(现在还没减)
+                // 不会触发count--;
+                if(hash2[temp] <= hash1[temp])
+                    --count;
+                
+                --hash2[temp];
+                
+                // count仍然精确地被确保是有效字符的个数
+                // 不会重复或缺少
+            }
+        }
+
+        if(ans_begin != -1)
+            return s.substr(ans_begin, ans_len);
+        else
+            return string();
+    }
+};
+```
+
 # end
