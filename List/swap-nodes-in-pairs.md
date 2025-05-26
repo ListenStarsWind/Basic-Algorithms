@@ -65,3 +65,33 @@ public:
 };
 ```
 
+## 后记
+
+这题怎么之前没写递归, 递归很简单, 没有模拟那么多弯弯绕, 我们定义`dfs`, 输入一个链表, 输出该链表交换之后的头结点, 这样的话, 当链表节点个数小于2时, 直接返回头结点, 大于等于2, 就交换, 并接收以第三个节点为头结点的链表`dfs`
+
+```cpp
+class Solution {
+    ListNode* dfs(ListNode* root)
+    {
+        if(!root || !root->next)
+            return root;
+        
+        ListNode* first = root;
+        ListNode* second = root->next;
+
+        first->next = dfs(second->next);
+        second->next = first;
+
+        return second;
+    }
+
+
+public:
+    ListNode* swapPairs(ListNode* head) {
+        return dfs(head);
+    }
+};
+```
+
+# 完
+

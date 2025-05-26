@@ -69,4 +69,59 @@ public:
 };
 ```
 
+## 后记
+
+这道题我不喜欢用模拟, 细节太多了, 所以这里还可以用递归.我们定义`dfs`完成这样的事, 输入一个链表, 返回翻转过后的, 那么首先需要看链表的节点数目够不够`k`, 不够就直接返回, 够的话, 首先把第`k`个节点的下一节点断开, 然后把它扔到链表翻转里面, 然后再用之前的头结点, 现在的尾节点接收剩下链表的`dfs`
+
+```cpp
+class Solution {
+    int k;
+
+    ListNode* reverse(ListNode* root)
+    {
+        ListNode* prev = nullptr;
+        while(root)
+        {
+            ListNode* next = root->next;
+            root->next = prev;
+            prev = root;
+            root = next;
+        }
+
+        return prev;
+    }
+
+    ListNode* dfs(ListNode* root)
+    {
+        int count = k;
+        ListNode* head = root;
+        ListNode* prev = nullptr;
+        while(root && count--)
+        {
+            prev = root;
+            root = root->next;
+        }
+
+        if(count > 0)
+            return head;
+        
+        ListNode* next = prev->next;
+        prev->next = nullptr;
+        prev = reverse(head);
+        head->next = dfs(next);
+
+        head = prev;
+
+        return head;
+    }
+
+
+public:
+    ListNode* reverseKGroup(ListNode* head, int _k) {
+        k = _k;
+        return dfs(head);
+    }
+};
+```
+
 # end

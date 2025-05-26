@@ -54,7 +54,7 @@ public:
             else
                 right = mid;
         }
-
+			
         // 处理空数组
         if (nums.empty() || nums[left] != target)
             return {-1, -1};
