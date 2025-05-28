@@ -12,7 +12,7 @@
 
 我们使用的基本容器是栈, 因为输入字符串是以嵌套形式组成的, 而且我们要从最里面进行解析.遇到`[`, 要把字符串传入栈中, 遇到`]`, 要把刚刚传入的字符串再拿出来, 是后进先出的模式, 所以自然是用栈的.
 
-将会有两个栈, 一个负责维护`[]`前面的重复次数, 另一个用啦维护`[]`里面的字符串.
+将会有两个栈, 一个负责维护`[]`前面的重复次数, 另一个用来维护`[]`里面的字符串.
 
 我们以`1[a2[bc]]de2[f]`为例.  有四种情况:  碰到数字字符,   碰到`[`,  碰到`]`,  碰到落单字符串
 
@@ -75,6 +75,55 @@ public:
         }
 
         return st1.back();
+    }
+};
+```
+
+## 后记
+
+这道题的细节太多了, 用上面的方法非常容易出错, 对此, 不如用个`dfs`, 每遇到一个`[`都意味着一个新的决策树, 交给下一层的`dfs`, 接收返回值, 进行统一处理, 并跳过末尾`]`, 如果碰到一个无非配对的`]`, 说明本树已经空了, 跳出循环, 回溯.
+
+```cpp
+class Solution {
+    int size;
+    int pos = 0;
+
+    string dfs(const string& s)
+    {
+        if(pos == size) return string();
+
+        string res;
+        int oper = 0;
+        while(pos < size)
+        {
+            if(s[pos] == '[')
+            {
+                ++pos;
+
+                string buff = dfs(s);
+
+                ++pos;
+
+                while(oper--) res += buff;
+            }
+            else if(s[pos] == ']') break;
+            else if(isdigit(s[pos]))
+            {
+                int temp = 0;
+                while(isdigit(s[pos])) temp = temp * 10 + (s[pos++] - '0');
+                oper = temp;
+            }
+            else res += s[pos++];
+        }
+
+        return res;
+    }
+
+
+public:
+    string decodeString(string s) {
+        size = s.size();
+        return dfs(s);
     }
 };
 ```
